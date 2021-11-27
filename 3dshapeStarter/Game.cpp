@@ -8,23 +8,24 @@
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-ID3D11InputLayout* gInputLayout;
-ID3D11Buffer* gQuadVB;
-ID3D11Buffer* gQuadIB;
-ID3D11VertexShader* pVertexShader = nullptr;
-ID3D11PixelShader* pPixelShader = nullptr;
-GfxParamsPerObj gGfxData;
-ID3D11Buffer* gpGfxConstsPerObjBuffer;
+ID3D11InputLayout* gInputLayout;				//vertex description for the gpu
+ID3D11Buffer* gQuadVB;							//vertex buffer describing a quad
+ID3D11Buffer* gQuadIB;							//index buffer describing a quad
+ID3D11VertexShader* pVertexShader = nullptr;	//handle a d3d vertex shader
+ID3D11PixelShader* pPixelShader = nullptr;		//handle to a d3d pixel shader
+GfxParamsPerObj gGfxData;						//a structure containing extra info the gpu needs to render something
+ID3D11Buffer* gpGfxConstsPerObjBuffer;			//handle to a d3d object constant buffer to put the data above into
 
+//the three matrices any 3D renderer needs
 Matrix gWorld;
 Matrix gView;
 Matrix gProj;
 
 
-const float MAIN_SCALE = 0.75f;
-float gXTrans = 0, gXVel = 1;
+const float MAIN_SCALE = 0.75f;		//scale everything the same to fit the screen
+float gXTrans = 0, gXVel = 1;		//used in kinematics
 
-
+//make a sprite geometry buffer
 void BuildQuad()
 {
 	// Create vertex buffer for a quad (two triangle square)
@@ -48,17 +49,20 @@ void BuildQuad()
 	CreateIndexBuffer(WinUtil::Get().GetD3D().GetDevice(), sizeof(UINT) * 6, indices, gQuadIB);
 }
 
+//build all buffers
 void BuildGeometryBuffers()
 {
 	BuildQuad();
 }
 
+//copy new game constants across to the gpu needed for rendering some geometry
 void UpdateConstsPerObj()
 {
 	gGfxData.wvp = gWorld * gView * gProj;
 	WinUtil::Get().GetD3D().GetDeviceCtx().UpdateSubresource(gpGfxConstsPerObjBuffer, 0, nullptr, &gGfxData, 0, 0);
 }
 
+//load up everything needed to use shaders
 bool BuildFX()
 {
 	MyD3D& d3d = WinUtil::Get().GetD3D();
@@ -106,7 +110,12 @@ void ReleaseGame()
 }
 
 
-
+/*
+* render some geometry - setup all buffer, shaders and constants
+* pVB - IN vertex buffer
+* pIB - IN index buffer
+* numIndices - IN how many primitives (triangles) x 3
+*/
 void RenderShape(ID3D11Buffer *pVB, ID3D11Buffer *pIB, int numIndices)
 {
 	MyD3D& d3d = WinUtil::Get().GetD3D();
@@ -118,7 +127,7 @@ void RenderShape(ID3D11Buffer *pVB, ID3D11Buffer *pIB, int numIndices)
 	d3d.GetDeviceCtx().DrawIndexed(numIndices, 0, 0);
 }
 
-
+//kinematics update
 void Update(float dTime)
 {
 	gXTrans += gXVel * dTime;
@@ -134,7 +143,7 @@ void Update(float dTime)
 	}
 }
 
-
+//render three shapes
 void Render(float dTime)
 {
 	MyD3D& d3d = WinUtil::Get().GetD3D();

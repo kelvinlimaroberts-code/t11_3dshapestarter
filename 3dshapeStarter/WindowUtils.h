@@ -90,6 +90,8 @@ public:
 	int GetClientHeight() const {
 		return mWinData.clientHeight;
 	}
+	//what is the aspect ratio?
+	float GetAspectRatio();
 	/*
 	* if you are trying to only use certain resolutions, use this to pick the highest that still fits 
 	* w - OUT width
