@@ -26,15 +26,6 @@ void WinUtil::GetClientExtents(int& width, int& height) const
 	height = mWinData.clientHeight;
 }
 
-float WinUtil::GetAspectRatio()
-{
-	int w, h;
-	GetClientExtents(w, h);
-	return (float)w / h;
-}
-
-
-
 LRESULT WinUtil::RealDefaultMssgHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)

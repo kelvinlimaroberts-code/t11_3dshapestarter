@@ -12,10 +12,12 @@ This is what our vertex data will look like
 */
 struct VertexPosColour
 {
-	DirectX::SimpleMath::Vector3 Pos;
-	DirectX::SimpleMath::Vector4 Colour;
+	DirectX::SimpleMath::Vector3 Pos;			//local space position of the vertex
+	DirectX::SimpleMath::Vector4 Colour;		//colour red, green, blue, alpha
 
+	//a description of this structure that we can pass to d3d
 	static const D3D11_INPUT_ELEMENT_DESC sVertexDesc[2];
+	//handy function to convert 0->255 int colour intensities to 0->1 values for D3D
 	void SetColour(unsigned int argb)
 	{
 		Colour.w = (float)(argb >> 24) / 255.f;
