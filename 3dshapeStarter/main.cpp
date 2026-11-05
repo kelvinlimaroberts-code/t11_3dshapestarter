@@ -15,6 +15,7 @@ using namespace std;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
+
 //main entry point for the game
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 				   PSTR cmdLine, int showCmd)
